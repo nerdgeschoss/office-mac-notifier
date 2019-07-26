@@ -1,4 +1,4 @@
-FROM ruby:2.6.1
+FROM ruby:2.6.1-alpine
 RUN mkdir /app
 WORKDIR /app
 ADD Gemfile /app/Gemfile
