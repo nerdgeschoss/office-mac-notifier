@@ -1,8 +1,9 @@
 #!ruby -w
 
-require_relative "../fritzbox.rb"
+require "bundler/setup"
+Bundler.require
 
-fritzbox = FritzBox.new(password: ENV["PW"])
-fritzbox.login
-body = { mac_addresses: fritzbox.devices.map(&:mac) }.to_json
+mac_addresses = `arp -a`.split("\n").map { |e| e.match(/at (?<mac>(?:\w{2}:?){6})/)&.[](:mac) }.compact
+
+body = { mac_addresses: mac_addresses }.to_json
 HTTParty.post("https://office.nerdgeschoss.de/api/hooks/online_devices", body: body, headers: { "Content-Type" => "application/json" })
